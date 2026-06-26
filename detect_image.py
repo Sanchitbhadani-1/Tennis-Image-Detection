@@ -1,7 +1,7 @@
 from ultralytics import YOLO
 
 model = YOLO("yolov8n.pt")
-results = model("https://ultralytics.com/images/bus.jpg")
+results = model("images/test_image.jpg")
 result = results[0]
 
 for box in result.boxes:
