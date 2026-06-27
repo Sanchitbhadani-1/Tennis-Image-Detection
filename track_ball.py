@@ -29,24 +29,30 @@ cap.release()
 cv2.destroyAllWindows()
 
 
-
+THRESHOLD = 8 #tuneable threshold for bounce detection
 bounces = 0
-direction = None
+last_extreme = ball_y_positions[0]
+looking_for = "low"
 
-for i in range(1, len(ball_y_positions)):
-    diff = ball_y_positions[i] - ball_y_positions[i - 1]
+for y in ball_y_positions[1:]:
+    if looking_for == "low":
+        
+        if y > last_extreme:
+            last_extreme = y                    
+        elif last_extreme - y >= THRESHOLD:    
+            bounces += 1                       
+            looking_for = "high"
+            last_extreme = y
+    else:  
+        
+        if y < last_extreme:
+            last_extreme = y                    
+        elif y - last_extreme >= THRESHOLD:     
+            looking_for = "low"               
+            last_extreme = y
 
-    if diff < 0:
-        new_direction = "falling"
-    elif diff > 0:
-        new_direction = "rising"
-    else:
-        continue
+print("Bounces counted:", bounces)
 
-    if direction == "falling" and new_direction == "rising":
-        bounces += 1
-    
-    direction = new_direction
 
 
 print("Frames where the ball was detected:", len(ball_y_positions))
